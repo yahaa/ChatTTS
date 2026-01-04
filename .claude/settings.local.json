@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python tts_cli.py:*)",
+      "Bash(DISABLE_IPV6=1 python:*)",
+      "Bash(HF_ENDPOINT=https://hf-mirror.com python:*)",
+      "Bash(python ./tts_cli.py:*)",
+      "Bash(pip show:*)",
+      "Bash(pip install:*)"
+    ]
+  }
+}

@@ -1,176 +1,956 @@
 1
-00:00:00,000 --> 00:00:05,459
-On a catch-up call, I told my friend Nick Wignall how someone had trained an AI model
+00:00:00,000 --> 00:00:06,639
+When I joined Google 14 years ago, I thought the job was just about writing great code.
 
 2
-00:00:05,459 --> 00:00:07,599
-to write blog posts in my style.
+00:00:07,419 --> 00:00:09,080
+Like I was partly right.
 
 3
-00:00:07,940 --> 00:00:10,560
-It was a pure research exercise on their part.
+00:00:10,500 --> 00:00:17,140
+But the longer I stayed, the more I realized that the engineers who thrive aren't necessarily
 
 4
-00:00:11,339 --> 00:00:16,559
-The idea was to train the tool on my past work, then give it the headlines and opening
+00:00:17,140 --> 00:00:18,480
+the best programmers.
 
 5
-00:00:16,559 --> 00:00:18,600
-paragraphs of my 2025 posts.
+00:00:19,140 --> 00:00:25,719
+They're the ones who figured out how to navigate everything around the code, people, the politics,
 
 6
-00:00:19,160 --> 00:00:21,899
-Could it generate the rest of each piece in a similar fashion?
+00:00:26,239 --> 00:00:27,640
+the alignment, the ambiguity.
 
 7
-00:00:22,000 --> 00:00:25,620
-So I only compared a handful of posts from their AI versions, so it looks fine.
+00:00:28,320 --> 00:00:32,560
+These lessons are really what I really wish I'd known earlier.
 
 8
-00:00:25,620 --> 00:00:30,280
-The A was fine enough at first glance, but pay attention just a little longer at something
+00:00:33,299 --> 00:00:36,759
+Some would have saved me like months of like frustration.
 
 9
-00:00:30,280 --> 00:00:31,399
-from the RFID country.
+00:00:37,560 --> 00:00:40,179
+So others just took years to fully understand.
 
 10
-00:00:33,039 --> 00:00:36,359
-It sounded pretty confident where I would have been doubtful and vice versa and so on.
+00:00:41,280 --> 00:00:43,880
+None of them are about specific technologies.
 
 11
-00:00:36,659 --> 00:00:41,159
-The creator wanted to know if such a model, once it worked properly, of course, could
+00:00:44,479 --> 00:00:46,700
+Those change too fast to matter.
 
 12
-00:00:41,159 --> 00:00:42,159
-be useful to me.
+00:00:48,000 --> 00:00:49,920
+They're about the patterns that keep showing up.
 
 13
-00:00:42,500 --> 00:00:46,259
-I told him even if it worked perfectly, it wouldn't lie because I don't write a daily
+00:00:50,159 --> 00:00:53,100
+So project after project team after team.
 
 14
-00:00:46,259 --> 00:00:48,060
-blog to crank out a post every day.
+00:00:53,740 --> 00:00:59,619
+I'm sharing them because I've benefited enormously from engineers who did the same for me.
 
 15
-00:00:48,299 --> 00:00:51,700
-If that was the point, I'd have switched to AI long ago already.
+00:01:00,200 --> 00:01:02,280
+Consider this my attempt to pay it forward.
 
 16
-00:00:51,700 --> 00:00:56,380
-I write a daily blog to make sure I remember how to think it's a daily practice for my
+00:01:03,020 --> 00:01:04,519
+So just one.
 
 17
-00:00:56,380 --> 00:00:56,939
-brain, a creator.
+00:01:05,420 --> 00:01:09,760
+The best kind of engineers are obsessed with solving user problems.
 
 18
-00:00:57,320 --> 00:00:59,460
-And if not, that's fine too, attract new readers.
+00:01:10,560 --> 00:01:16,219
+It's seductive to fall in love with a technology and go looking for places to apply it.
 
 19
-00:01:00,140 --> 00:01:01,079
-That's fine too.
+00:01:16,739 --> 00:01:17,840
+I've always done it.
 
 20
-00:01:01,920 --> 00:01:06,859
-Nick said, my story reminded him of an interview with writer and Vox, founder Ezra Klein.
+00:01:18,299 --> 00:01:19,280
+Everyone has.
 
 21
-00:01:07,200 --> 00:01:11,799
-Klein explained that so far AI hasn't been all that useful to him.
+00:01:19,280 --> 00:01:25,780
+But the engineers who create the most value work backwards, they become obsessed with understanding
 
 22
-00:01:12,079 --> 00:01:16,560
-He uses it for light research or to structure some data, but that's about it.
+00:01:25,780 --> 00:01:31,239
+user problems deeply and that solutions really emerge from that understanding.
 
 23
-00:01:16,560 --> 00:01:16,959
-Why?
+00:01:32,200 --> 00:01:37,760
+User obsession means spending time in support tickets, talking to users, watching users,
 
 24
-00:01:17,439 --> 00:01:21,200
-Because the writer doing the research is what makes the writing unique.
+00:01:38,140 --> 00:01:40,760
+struggle, asking why until you hit bedrock.
 
 25
-00:01:21,200 --> 00:01:26,480
-When you're using AI as a writer, you're outsourcing the part of the work like Tend
+00:01:42,439 --> 00:01:47,840
+The engineer who truly understands the problem often finds that the elegant solution is
 
 26
-00:01:26,480 --> 00:01:27,840
-Jovian need to do the most.
+00:01:47,840 --> 00:01:49,719
+actually simpler than anyone expected.
 
 27
-00:01:27,980 --> 00:01:28,620
-Klein believes.
+00:01:51,219 --> 00:01:57,959
+The engineer who starts with a solution tends to build complexity in search of a justification.
 
 28
-00:01:30,700 --> 00:01:35,939
-This is why reading actual books in full might now be more valuable than it ever has been.
+00:01:58,680 --> 00:02:00,879
+To being right is just so cheap.
 
 29
-00:01:36,340 --> 00:01:41,319
-Only if you've seen every word will you discover insights and links in AI would never include
+00:02:02,560 --> 00:02:05,719
+Getting to right together is like the real work.
 
 30
-00:01:41,319 --> 00:01:42,879
-in its average driven summary.
+00:02:06,439 --> 00:02:10,539
+You can win every technical argument and lose the whole project.
 
 31
-00:01:43,379 --> 00:01:47,319
-Nick pointed out the same applies to a writer struggling when creating a piece, when you're
+00:02:11,180 --> 00:02:16,840
+I've watched brilliant engineers accrue silent resentment by always being the smartest
 
 32
-00:01:47,319 --> 00:01:50,200
-stuck and sit there thinking, trying to come up with what's next.
+00:02:16,840 --> 00:02:17,780
+person in the room.
 
 33
-00:01:50,200 --> 00:01:55,400
-That's the valuable part of writing, of attempting to use AI to remove that stuckness.
+00:02:18,939 --> 00:02:23,300
+The cost shows up later as mysterious execution issues and strange resistance.
 
 34
-00:01:55,680 --> 00:01:59,540
-But it's basically cheating and leads to a basic unblaggian.
+00:02:23,819 --> 00:02:25,240
+The skill isn't being right.
 
 35
-00:02:01,719 --> 00:02:06,739
-But is it the idea that needs to slot into this gap or just a bad piece of filler that
+00:02:25,900 --> 00:02:31,219
+It's entering discussions to align on the problem, creating space for others and remaining
 
 36
-00:02:06,739 --> 00:02:08,539
-I'll make for a fragile mental bridge?
+00:02:31,219 --> 00:02:32,960
+skeptical of your own certainty.
 
 37
-00:02:09,319 --> 00:02:14,840
-Most readers won't dare to cross the more I think about the happier I am that AI is
+00:02:34,139 --> 00:02:39,599
+Strong opinions weekly held not because you lack conviction but because decisions made
 
 38
-00:02:14,840 --> 00:02:17,500
-transforming the world of writing in a way.
+00:02:39,599 --> 00:02:42,340
+under uncertainty shouldn't be welded to identity.
 
 39
-00:02:17,500 --> 00:02:22,699
-I think it'll make it even easier to stand out because the more people take shortcuts,
+00:02:43,060 --> 00:02:47,500
+Like three bias towards like action, like ship.
 
 40
-00:02:22,900 --> 00:02:27,419
-the less quality will remain for readers to flock to, even if the overall quantity of
+00:02:49,060 --> 00:02:52,620
+You can edit the bed page but you can't edit a blank one.
 
 41
-00:02:27,419 --> 00:02:28,580
-options is much larger.
+00:02:53,159 --> 00:02:56,620
+So the quest for perfection is just paralyzing.
 
 42
-00:02:29,620 --> 00:02:34,939
-The real artists, fighters, makers, they stick with the truth as old as time itself.
+00:02:57,699 --> 00:03:02,639
+I've watched engineers spend weeks debating the ideal architecture for something they've
 
 43
-00:02:35,300 --> 00:02:36,939
-The suck is why we're here.
+00:03:02,639 --> 00:03:03,080
+never built.
 
 44
-00:02:37,460 --> 00:02:42,699
-And only those who overcome it themselves will reap all the rewards of their hard labor.
+00:03:03,900 --> 00:03:09,919
+The perfect solution so rarely emerges from thought alone, it emerges from contact with reality.
+
+45
+00:03:10,479 --> 00:03:13,159
+AI can in so many ways help here.
+
+46
+00:03:13,939 --> 00:03:16,419
+First do it, then do it, right, then do it better.
+
+47
+00:03:17,620 --> 00:03:22,659
+Get the really ugly prototype in front of user, right?
+
+48
+00:03:22,900 --> 00:03:25,120
+The messy first draft of the whole designed up.
+
+49
+00:03:26,360 --> 00:03:28,979
+Ship the amp that embarrasses you so slightly.
+
+50
+00:03:30,139 --> 00:03:36,360
+You learn more from one week of real feedback than a month of theoretical debate.
+
+51
+00:03:36,800 --> 00:03:38,340
+Momentum creates like clarity.
+
+52
+00:03:39,219 --> 00:03:42,719
+Analysis paralysis creates nothing like four.
+
+53
+00:03:43,360 --> 00:03:45,039
+Clarity is just kind of seniority.
+
+54
+00:03:46,300 --> 00:03:48,240
+Cleverness is just like overhead.
+
+55
+00:03:48,840 --> 00:03:53,400
+The instinct to write clever code is almost universal among engineers.
+
+56
+00:03:54,080 --> 00:03:56,900
+It just feels like proof of like competent.
+
+57
+00:03:57,919 --> 00:04:03,120
+But softer engineering is what happens when you add time and other programmers.
+
+58
+00:04:03,860 --> 00:04:06,680
+In that environment clarity isn't a style preference.
+
+59
+00:04:06,680 --> 00:04:08,539
+It's operational risk reduction.
+
+60
+00:04:09,960 --> 00:04:14,520
+Your code is a strategy memo to strangers who will maintain it at
+
+61
+00:04:14,520 --> 00:04:19,620
+I'm during an audit optimized for their comprehension, not just your elegant.
+
+62
+00:04:20,480 --> 00:04:25,040
+The senior engineers I respect most have learned to trade cleverness for clarity
+
+63
+00:04:25,040 --> 00:04:25,839
+every time.
+
+64
+00:04:27,259 --> 00:04:34,100
+Maybe novelty is a loan you repay in outages hiring and like cognitive overhead.
+
+65
+00:04:34,660 --> 00:04:39,139
+Treat your technology choices like an organization with a small innovation token budget.
+
+66
+00:04:40,060 --> 00:04:44,420
+Spend one each time you adopt something materially non really standard.
+
+67
+00:04:44,980 --> 00:04:46,480
+You can't afford so many.
+
+68
+00:04:47,399 --> 00:04:49,639
+The punchline isn't never innovates.
+
+69
+00:04:49,860 --> 00:04:52,540
+It's innovate only where you're uniquely paid to innovate.
+
+70
+00:04:52,740 --> 00:04:57,959
+Everything else should default to boring because boring has always known failure mode.
+
+71
+00:04:58,899 --> 00:05:04,680
+The best tool for the job is often the least worst tool across many jobs
+
+72
+00:05:04,680 --> 00:05:07,439
+because operating a zoo becomes the real attack.
+
+73
+00:05:08,220 --> 00:05:12,160
+Maybe your code just doesn't advocate for you.
+
+74
+00:05:12,579 --> 00:05:14,699
+So people really do.
+
+75
+00:05:16,160 --> 00:05:20,199
+Early in my career I believed great work would speak for itself.
+
+76
+00:05:20,959 --> 00:05:22,379
+I was just like wrong.
+
+77
+00:05:23,339 --> 00:05:26,459
+Code just like sits silently in a repository.
+
+78
+00:05:27,419 --> 00:05:34,980
+Your manager mentions you in a meeting or they don't appear recommends you for a project or maybe someone else.
+
+79
+00:05:35,920 --> 00:05:41,300
+In large organizations decisions get made in meetings you're not invited to.
+
+80
+00:05:42,019 --> 00:05:47,680
+So using whatever summaries you didn't write just by people who have five minutes and 12 priority.
+
+81
+00:05:48,360 --> 00:05:52,259
+If no one can articulate your impact when you're not in the room,
+
+82
+00:05:52,819 --> 00:05:55,439
+your impact is effectively optional.
+
+83
+00:05:56,160 --> 00:05:58,740
+So this isn't strictly about like self promotion.
+
+84
+00:05:59,920 --> 00:06:04,759
+It's about making the value chain legible to everyone, including yourself.
+
+85
+00:06:05,379 --> 00:06:06,019
+Maybe seven.
+
+86
+00:06:07,420 --> 00:06:09,879
+The best code is the code you never had to write.
+
+87
+00:06:11,259 --> 00:06:15,600
+So we actually celebrate creation and like engineering culture.
+
+88
+00:06:16,360 --> 00:06:22,100
+Nobody gets promoted for deleting code even though deletion often improves a system more than addition.
+
+89
+00:06:22,980 --> 00:06:30,579
+Every line of code you don't write is a line you never have to debug, maintain or explain.
+
+90
+00:06:31,279 --> 00:06:38,019
+Before you build exhaust the question, what would happen if we just didn't sometimes the answer is nothing bad?
+
+91
+00:06:38,360 --> 00:06:39,579
+And that's just your solution.
+
+92
+00:06:40,579 --> 00:06:45,379
+The problem isn't that engineers can't write code or use AI to do so.
+
+93
+00:06:46,459 --> 00:06:58,699
+It's that we're so good at writing it that we forget to ask whether we should eight at scale, even your bugs just have users with enough users.
+
+94
+00:06:59,339 --> 00:07:03,439
+Every observable behavior becomes a dependency regardless of what you promised.
+
+95
+00:07:03,980 --> 00:07:08,500
+Someone is scraping your API automating your quirks, caching your bug.
+
+96
+00:07:09,060 --> 00:07:11,680
+This creates a career level insight.
+
+97
+00:07:11,959 --> 00:07:16,879
+So you can't treat compatibility work as maintenance and new features as real work.
+
+98
+00:07:17,259 --> 00:07:18,279
+Compatibility's product.
+
+99
+00:07:19,279 --> 00:07:22,680
+Design your deprecations as migrations with time tooling and empathy.
+
+100
+00:07:23,980 --> 00:07:27,620
+Most API design is actually API just retirement like night.
+
+101
+00:07:28,860 --> 00:07:32,379
+Most slow teams are actually like really misaligned team.
+
+102
+00:07:33,100 --> 00:07:37,160
+When a project drags the instinct is to blame execution.
+
+103
+00:07:37,579 --> 00:07:39,220
+So people aren't working hard enough.
+
+104
+00:07:39,560 --> 00:07:41,220
+The technology is wrong.
+
+105
+00:07:41,420 --> 00:07:42,959
+There aren't enough engineers.
+
+106
+00:07:43,860 --> 00:07:47,180
+Usually like none of that is the real problem.
+
+107
+00:07:47,740 --> 00:07:50,759
+In large companies teams are your unit of concurrency.
+
+108
+00:07:51,259 --> 00:07:54,800
+But coordination costs grow geometrically as teams multiply.
+
+109
+00:07:55,620 --> 00:07:58,399
+Most slowness is actually alignment failure.
+
+110
+00:07:58,959 --> 00:08:03,800
+So people building the wrong things or the right things in incompatible ways.
+
+111
+00:08:04,860 --> 00:08:10,439
+Senior engineers spend more time clarifying direction, interfaces and priorities than
+
+112
+00:08:10,439 --> 00:08:13,720
+writing code faster because that's where the actual bottleneck live.
+
+113
+00:08:14,399 --> 00:08:14,680
+10.
+
+114
+00:08:15,560 --> 00:08:17,980
+Focus on what you can really control.
+
+115
+00:08:18,620 --> 00:08:20,360
+Just ignore what you can't.
+
+116
+00:08:21,100 --> 00:08:25,899
+In a large company, countless variables are outside your control or organizational changes,
+
+117
+00:08:25,899 --> 00:08:30,819
+management decisions, market shifts, product pivot dwelling on these
+
+118
+00:08:30,819 --> 00:08:33,620
+creates like a just anxiety without agency.
+
+119
+00:08:34,419 --> 00:08:39,799
+The engineers who stay sane and effective zero in on their sphere of influence.
+
+120
+00:08:40,680 --> 00:08:43,740
+You can't really control whether a real work happens.
+
+121
+00:08:44,759 --> 00:08:50,799
+You can control the quality of your work, how you respond and what you learn.
+
+122
+00:08:50,799 --> 00:08:57,820
+When faced with uncertainty, break problems into pieces and identify the specific actions available to you.
+
+123
+00:08:58,159 --> 00:09:02,620
+This isn't really passive acceptance, but it is really strategic focus.
+
+124
+00:09:03,700 --> 00:09:11,240
+Energy spent on what you can't change is like energy stolen from what you can't like 11.
+
+125
+00:09:11,940 --> 00:09:13,840
+Extractions don't remove complexity.
+
+126
+00:09:14,759 --> 00:09:17,120
+They move it to the day you're on call.
+
+127
+00:09:18,460 --> 00:09:23,659
+Every abstraction is a bet that you won't need to understand what's underneath like a.
+
+128
+00:09:24,220 --> 00:09:33,899
+So sometimes you just win that bet, but something always leaks and when it does, you need to know exactly what you're standing on.
+
+129
+00:09:35,159 --> 00:09:39,419
+Senior engineers keep learning lower level things, even as stacks get higher,
+
+130
+00:09:40,259 --> 00:09:46,860
+not out of nostalgia, but out of respect for the moment when the abstraction fails and
+
+131
+00:09:47,120 --> 00:09:51,220
+you're alone with the system and just like use your stack.
+
+132
+00:09:52,299 --> 00:09:55,639
+But people working model of its underlying failure modes.
+
+133
+00:09:56,899 --> 00:09:57,019
+12.
+
+134
+00:09:57,799 --> 00:09:59,299
+Writing forces like clarity.
+
+135
+00:10:00,039 --> 00:10:06,379
+The fastest way to learn something better is to try teaching it like writing forces like clarity.
+
+136
+00:10:07,100 --> 00:10:13,100
+When I explain a concept to others in a doc, a talk, a code review comment,
+
+137
+00:10:13,100 --> 00:10:17,419
+even just chatting with AI, I discover the gaps in my own understanding.
+
+138
+00:10:18,480 --> 00:10:23,559
+The act of making something legible to someone else makes it more legible to me.
+
+139
+00:10:24,340 --> 00:10:28,799
+This doesn't mean that you're going to learn how to be a surgeon by teaching it,
+
+140
+00:10:29,179 --> 00:10:34,820
+but the premise still holds largely true in the software engineering domain.
+
+141
+00:10:35,700 --> 00:10:39,940
+So this isn't just about just being generous with knowledge.
+
+142
+00:10:40,500 --> 00:10:42,740
+It's just a really selfish learning hack.
+
+143
+00:10:43,799 --> 00:10:47,919
+If you think you understand something, just try to explain it simply.
+
+144
+00:10:49,000 --> 00:10:51,299
+The places where you stumble are.
+
+145
+00:10:51,899 --> 00:10:54,620
+The places where your understanding is so shallow.
+
+146
+00:10:55,320 --> 00:10:57,639
+Like teaching is debugging your own mental models.
+
+147
+00:10:58,539 --> 00:10:59,000
+13.
+
+148
+00:10:59,840 --> 00:11:03,960
+The work that makes other work possible is priceless and invisible.
+
+149
+00:11:04,899 --> 00:11:10,039
+Glow work documentation onboarding cross team coordination process improvement is vital.
+
+150
+00:11:10,720 --> 00:11:16,759
+But if you do it unconsciously, it can stall your technical trajectory and really burn you up.
+
+151
+00:11:17,399 --> 00:11:23,679
+The trap is doing it as helpfulness rather than treating it as deliberate, bounded, visible impact.
+
+152
+00:11:24,299 --> 00:11:30,399
+Time box a really rotated, turn it into artifacts docs templates automation.
+
+153
+00:11:31,360 --> 00:11:35,559
+And make it legible as impact, not just as personality tree,
+
+154
+00:11:36,059 --> 00:11:40,460
+priceless and invisible is a really dangerous combination for your career.
+
+155
+00:11:41,139 --> 00:11:41,419
+14.
+
+156
+00:11:42,620 --> 00:11:46,320
+If you win every debate, you're probably accumulating silent resistance.
+
+157
+00:11:47,679 --> 00:11:51,460
+I've learned to be really suspicious of my own certainty.
+
+158
+00:11:52,179 --> 00:11:56,179
+When I went too easily, like something is usually really wrong,
+
+159
+00:11:57,139 --> 00:12:00,820
+people stop fighting you not because you've convinced them,
+
+160
+00:12:00,960 --> 00:12:05,799
+but because they've given up trying and they'll express that disagreement and execution,
+
+161
+00:12:06,139 --> 00:12:06,679
+not meeting.
+
+162
+00:12:07,580 --> 00:12:09,100
+Like real alignment takes longer.
+
+163
+00:12:10,100 --> 00:12:15,399
+You have to actually understand other perspectives, incorporate feedback and sometimes change
+
+164
+00:12:15,399 --> 00:12:16,299
+your mind publicly.
+
+165
+00:12:16,879 --> 00:12:23,759
+The short term feeling of being right is worth so much less than the long term reality of building
+
+166
+00:12:23,759 --> 00:12:27,759
+things with willing collaborators, probably 15.
+
+167
+00:12:29,000 --> 00:12:36,179
+When a measure becomes a target, it stops like just measuring every kind of metric you expose to
+
+168
+00:12:36,179 --> 00:12:43,000
+management will eventually be game, not through malice, but because humans optimize for what's
+
+169
+00:12:43,000 --> 00:12:43,320
+measured.
+
+170
+00:12:43,980 --> 00:12:48,059
+Like if you track lines of code, you'll get more line.
+
+171
+00:12:48,340 --> 00:12:52,559
+So if you track velocity, you'll get really inflated estimate.
+
+172
+00:12:52,559 --> 00:12:56,700
+The senior move responds to every metric request with a pair,
+
+173
+00:12:57,559 --> 00:13:04,279
+one for speed, one for like quality or like risk, then insists on interpreting trends,
+
+174
+00:13:04,399 --> 00:13:05,399
+not worshipping threshold.
+
+175
+00:13:06,259 --> 00:13:10,080
+So the goal is always insight, not just surveillance,
+
+176
+00:13:10,899 --> 00:13:16,519
+16, admitting what you don't know creates more safety than pretending you do.
+
+177
+00:13:17,379 --> 00:13:22,700
+Senior engineers who say I don't know aren't showing weakness, they're creating permission.
+
+178
+00:13:23,299 --> 00:13:29,639
+When a leader admits uncertainty, it signals that the room is safe for others to do the same.
+
+179
+00:13:30,220 --> 00:13:35,919
+The alternative is a culture where everyone pretends to understand and problem stay hidden until they
+
+180
+00:13:35,919 --> 00:13:36,399
+explode.
+
+181
+00:13:37,379 --> 00:13:43,379
+I've seen teams where the most senior person never admitted confusion and I've seen the damage.
+
+182
+00:13:43,939 --> 00:13:48,879
+Questions just don't get so asked, just assumptions don't just get challenged.
+
+183
+00:13:49,780 --> 00:13:53,860
+Junior engineers stay silent because they assume everyone else gets it.
+
+184
+00:13:54,740 --> 00:14:00,500
+Model curiosity and you actually get a team that actually learns maybe 17.
+
+185
+00:14:01,799 --> 00:14:07,139
+Your network outlasts like every job you'll ever have early in my career.
+
+186
+00:14:07,519 --> 00:14:11,639
+I focused on the work and neglected networking in hindsight.
+
+187
+00:14:11,639 --> 00:14:13,700
+So maybe this was a mistake.
+
+188
+00:14:14,480 --> 00:14:18,100
+Colleagues who invested in relationships inside and outside the company
+
+189
+00:14:18,679 --> 00:14:20,019
+reap benefits for decade.
+
+190
+00:14:20,659 --> 00:14:22,279
+They heard about opportunities first,
+
+191
+00:14:22,480 --> 00:14:28,460
+good build bridges faster, got recommended for roles and co-founded ventures with people
+
+192
+00:14:28,460 --> 00:14:29,980
+they built trust with over years.
+
+193
+00:14:30,700 --> 00:14:33,539
+Your job isn't forever but your whole network is.
+
+194
+00:14:34,600 --> 00:14:38,299
+Approach it with curiosity and generosity, not transactional hustle.
+
+195
+00:14:39,399 --> 00:14:44,659
+When the time comes to move on, it's often relationships that open the door.
+
+196
+00:14:45,659 --> 00:14:46,019
+18.
+
+197
+00:14:46,940 --> 00:14:51,080
+Most performance wins come from removing work, not just adding cleverness.
+
+198
+00:14:52,059 --> 00:14:58,419
+When systems get slow, the instinct is to add caching layers parallel processing smarter algorithm.
+
+199
+00:14:59,659 --> 00:15:01,360
+Sometimes that's just sort of right.
+
+200
+00:15:01,899 --> 00:15:06,860
+But I've seen more performance wins from asking, what are we computing that we don't need
+
+201
+00:15:06,860 --> 00:15:13,259
+deleting unnecessary work is almost always more impactful than doing necessary work faster.
+
+202
+00:15:13,779 --> 00:15:21,100
+The fastest code is just code that never run before you optimize question whether the work should
+
+203
+00:15:21,100 --> 00:15:28,600
+exist at all. Like 19. Process exists to reduce uncertainty, not to create paper trail.
+
+204
+00:15:29,200 --> 00:15:32,580
+The best process makes coordination easier and failures cheaper.
+
+205
+00:15:32,580 --> 00:15:36,039
+The worst process is bureaucratic theater.
+
+206
+00:15:36,500 --> 00:15:40,200
+It exists not to help to assign blame when things go wrong.
+
+207
+00:15:41,139 --> 00:15:48,000
+If you can't explain how a process reduces risk or increases clarity, it's probably just overhead.
+
+208
+00:15:48,720 --> 00:15:55,419
+And if people are spending more time documenting their work than doing it, something has gone deeply wrong.
+
+209
+00:15:55,840 --> 00:15:56,600
+Like 20.
+
+210
+00:15:57,500 --> 00:16:00,940
+Eventually time actually becomes worth more than money.
+
+211
+00:16:00,940 --> 00:16:02,159
+Act accordingly.
+
+212
+00:16:02,980 --> 00:16:07,639
+Early in your career, you trade time for money and that's fine.
+
+213
+00:16:08,220 --> 00:16:12,940
+But at some point, maybe the whole calculus kind of inverts.
+
+214
+00:16:14,139 --> 00:16:18,019
+You start to realize that time is the non-renewable resource.
+
+215
+00:16:18,740 --> 00:16:25,419
+I've watched senior engineers burn out chasing the next promo level optimizing for a few more
+
+216
+00:16:25,419 --> 00:16:26,899
+percentage points of compensation.
+
+217
+00:16:27,440 --> 00:16:30,120
+Some of them just kind of got it.
+
+218
+00:16:31,320 --> 00:16:35,879
+Most of them wondered afterward if it was worth what they gave up.
+
+219
+00:16:36,519 --> 00:16:43,299
+The answer isn't, don't work hard. It's like don't want to trading and make the trade deliberately
+
+220
+00:16:43,299 --> 00:16:48,139
+absolutely. There are no shortcuts, but like there is sort of compounding.
+
+221
+00:16:49,139 --> 00:16:53,379
+Expertise comes from deliberate practice, pushing slightly beyond your current skill,
+
+222
+00:16:53,600 --> 00:16:55,759
+reflecting, repeating. Just for years.
+
+223
+00:16:57,120 --> 00:16:58,700
+There's just no condensed version.
+
+224
+00:17:00,199 --> 00:17:04,500
+But here's the hopeful part, learning compounds when it creates new options,
+
+225
+00:17:04,500 --> 00:17:05,900
+not just new trivia.
+
+226
+00:17:06,720 --> 00:17:08,599
+Right, not just for engagement, but for clarity.
+
+227
+00:17:09,799 --> 00:17:12,500
+Build kind of like reusable primitive.
+
+228
+00:17:13,220 --> 00:17:15,660
+Collect, collect scar tissue into like playbooks.
+
+229
+00:17:16,259 --> 00:17:20,660
+The engineer who treats their career as compound interest,
+
+230
+00:17:20,980 --> 00:17:24,680
+not just lottery tickets tends to end up much further ahead.
+
+231
+00:17:25,539 --> 00:17:33,299
+A final thought, 21 lessons sounds like a lot, but they really come down to a few core ideas.
+
+232
+00:17:34,000 --> 00:17:40,559
+So stay curious, stay humble, and remember that the work is always about people.
+
+233
+00:17:41,079 --> 00:17:45,059
+The users you're building for and the teammates you're building always with.
+
+234
+00:17:45,539 --> 00:17:51,960
+The career and engineering is long enough to make plenty of mistakes and still come out ahead.
+
+235
+00:17:53,220 --> 00:17:58,720
+The engineers, I admire most aren't the ones who got everything right.
+
+236
+00:17:59,099 --> 00:18:03,319
+They're the ones who learned from what went wrong, shared what they discovered,
+
+237
+00:18:03,319 --> 00:18:04,720
+and kept showing up.
+
+238
+00:18:05,240 --> 00:18:08,700
+If you're early in your journey, know that it gets richer with time.
+
+239
+00:18:09,720 --> 00:18:13,519
+If you're really deep into it, I hope some of these resonate.
 

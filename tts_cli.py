@@ -44,9 +44,12 @@ import argparse
 import sys
 import json
 import re
+import warnings
 from pathlib import Path
 from typing import Tuple, Dict, Optional, List
-from tempfile import TemporaryDirectory
+
+# Suppress Whisper Triton warning on Windows (Triton not supported, falls back to slower DTW)
+warnings.filterwarnings("ignore", message="Failed to launch Triton kernels")
 
 import numpy as np
 import torch
@@ -86,6 +89,105 @@ def float_to_int16(audio: np.ndarray) -> np.ndarray:
     am = int(math.ceil(float(np.abs(audio).max())) * 32768)
     am = 32767 * 32768 // am
     return np.multiply(audio, am).astype(np.int16)
+
+
+# ========================================
+# GPU Memory Utils
+# ========================================
+
+def get_gpu_free_memory_mb() -> float:
+    """
+    Get available GPU memory in MB.
+
+    Returns:
+        Available GPU memory in MB, or 0 if no GPU available.
+    """
+    if not torch.cuda.is_available():
+        return 0
+
+    try:
+        torch.cuda.synchronize()
+        free_memory = torch.cuda.mem_get_info()[0]  # Returns (free, total)
+        return free_memory / (1024 * 1024)  # Convert to MB
+    except Exception:
+        return 0
+
+
+def estimate_memory_per_chunk_mb(chunk_chars: int = 800, fp16: bool = True) -> float:
+    """
+    Estimate GPU memory usage per chunk based on ChatTTS model architecture.
+
+    Based on GPT config: hidden_size=768, num_hidden_layers=20, max_new_token=2048
+
+    Args:
+        chunk_chars: Number of characters per chunk
+        fp16: Whether using FP16 (default) or FP32
+
+    Returns:
+        Estimated memory usage in MB per chunk
+    """
+    # Rough token estimation: ~2 tokens per character
+    input_tokens = chunk_chars * 2
+    output_tokens = 2048  # max_new_token
+    total_tokens = input_tokens + output_tokens
+
+    hidden_size = 768
+    num_layers = 20
+    bytes_per_element = 2 if fp16 else 4
+
+    # KV cache: 2 (K+V) * layers * seq_len * hidden_size * bytes
+    kv_cache_mb = (2 * num_layers * total_tokens * hidden_size * bytes_per_element) / (1024 * 1024)
+
+    # Intermediate activations (roughly 1.5x KV cache)
+    activations_mb = kv_cache_mb * 1.5
+
+    # Add safety margin (1.3x)
+    total_mb = (kv_cache_mb + activations_mb) * 1.3
+
+    return total_mb
+
+
+def calculate_optimal_batch_size(
+    num_chunks: int,
+    chunk_chars: int = 800,
+    reserved_memory_mb: float = 1024,
+    min_batch: int = 1,
+    max_batch: int = 6
+) -> int:
+    """
+    Calculate optimal batch size based on available GPU memory.
+
+    Args:
+        num_chunks: Total number of chunks to process
+        chunk_chars: Average characters per chunk
+        reserved_memory_mb: Memory to reserve for model and system (default 1GB)
+        min_batch: Minimum batch size
+        max_batch: Maximum batch size
+
+    Returns:
+        Optimal batch size
+    """
+    free_memory = get_gpu_free_memory_mb()
+
+    if free_memory <= 0:
+        # No GPU or can't detect, use conservative batch size
+        return min(2, num_chunks)
+
+    # Available memory for inference
+    available_mb = free_memory - reserved_memory_mb
+    if available_mb <= 0:
+        return min_batch
+
+    # Memory per chunk
+    mem_per_chunk = estimate_memory_per_chunk_mb(chunk_chars)
+
+    # Calculate batch size
+    batch_size = int(available_mb / mem_per_chunk)
+
+    # Clamp to valid range
+    batch_size = max(min_batch, min(batch_size, max_batch, num_chunks))
+
+    return batch_size
 
 
 # ========================================
@@ -255,7 +357,7 @@ def normalize_text_for_tts(text: str) -> str:
     return text.strip()
 
 
-def split_text_intelligently(text: str, max_length: int = 800) -> List[str]:
+def split_text_intelligently(text: str, max_length: int = 800, min_tail_length: int = 300) -> List[str]:
     """
     Split long text into smaller chunks by paragraphs.
 
@@ -263,10 +365,13 @@ def split_text_intelligently(text: str, max_length: int = 800) -> List[str]:
     1. First split by paragraphs (one or more newlines)
     2. If a paragraph exceeds 800 characters, split at the last period (.)
        that keeps the chunk under 800 characters
+    3. If the last chunk is too short (< min_tail_length), merge it with the previous chunk
 
     Args:
         text: Input text to split
         max_length: Maximum length of each chunk (default: 800)
+        min_tail_length: Minimum length for the last chunk (default: 300)
+                        If shorter, merge with previous chunk
 
     Returns:
         List of text chunks
@@ -311,16 +416,38 @@ def split_text_intelligently(text: str, max_length: int = 800) -> List[str]:
         if remaining:
             chunks.append(remaining)
 
+    # Step 3: Merge short tail chunk with previous chunk to avoid generation issues
+    # Short chunks can cause the model to immediately generate end tokens
+    if len(chunks) > 1 and len(chunks[-1]) < min_tail_length:
+        last_chunk = chunks.pop()
+        chunks[-1] = chunks[-1] + " " + last_chunk
+
     return chunks
 
 
-def merge_audio_files(audio_arrays: List[np.ndarray], sample_rate: int = 24000) -> np.ndarray:
+def split_paragraph_to_sentences(text: str) -> List[str]:
+    """
+    Split a paragraph into sentences.
+
+    Args:
+        text: Input paragraph text
+
+    Returns:
+        List of sentences
+    """
+    # Split at sentence endings (. ! ?) followed by whitespace
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    return [s.strip() for s in sentences if s.strip()]
+
+
+def merge_audio_files(audio_arrays: List[np.ndarray], sample_rate: int = 24000, pause_duration: float = 0.7) -> np.ndarray:
     """
     Merge multiple audio arrays into a single audio file.
 
     Args:
         audio_arrays: List of audio numpy arrays
         sample_rate: Sample rate of the audio
+        pause_duration: Duration of silence between segments in seconds (default: 0.7)
 
     Returns:
         Merged audio array
@@ -330,9 +457,9 @@ def merge_audio_files(audio_arrays: List[np.ndarray], sample_rate: int = 24000) 
     if len(audio_arrays) == 1:
         return audio_arrays[0]
 
-    # Add silence between segments (0.7 seconds for clear pauses)
-    silence_duration = int(sample_rate * 0.7)
-    silence = np.zeros(silence_duration, dtype=np.int16)
+    # Add silence between segments
+    silence_samples = int(sample_rate * pause_duration)
+    silence = np.zeros(silence_samples, dtype=np.int16)
 
     # Merge all arrays with silence in between
     merged = audio_arrays[0]
@@ -380,7 +507,7 @@ def print_header() -> None:
 
 def print_step(step_num: int, total_steps: int, description: str) -> None:
     """Print step header."""
-    print(f"\n🎙️  Step {step_num}/{total_steps}: {description}")
+    print(f"\n[Step {step_num}/{total_steps}] {description}")
 
 
 def print_info(message: str, indent: int = 1) -> None:
@@ -390,12 +517,12 @@ def print_info(message: str, indent: int = 1) -> None:
 
 def print_success(message: str, indent: int = 1) -> None:
     """Print success message."""
-    print(f"{'   ' * indent}✅ {message}")
+    print(f"{'   ' * indent}[OK] {message}")
 
 
 def print_summary(stats: Dict) -> None:
     """Print final summary matching tools.py style."""
-    print(f"\n📊 Statistics:")
+    print(f"\n[Statistics]")
     print(f"   Audio duration: {stats['duration']:.2f} seconds")
     if stats['segments'] > 0:
         print(f"   Subtitle segments: {stats['segments']} segments")
@@ -403,14 +530,14 @@ def print_summary(stats: Dict) -> None:
     print(f"   Average speed: {stats['chars_per_sec']:.1f} chars/sec")
 
     print("\n" + "=" * 70)
-    print("🎉 All done!")
+    print("All done!")
     print("=" * 70)
     print("\nGenerated files:")
     for i, filepath in enumerate(stats['files'], 1):
         print(f"   {i}. {filepath}")
 
     if stats['segments'] > 0:
-        print("\n💡 Tip: Use a video player to load the subtitle file")
+        print("\nTip: Use a video player to load the subtitle file")
     print("=" * 70 + "\n")
 
 
@@ -530,7 +657,7 @@ def generate_audio(
 
     if not quiet:
         print_success(f"Audio saved: {output_path}")
-        print_info(f"⏱️  Duration: {duration:.2f} seconds")
+        print_info(f"Duration: {duration:.2f} seconds")
 
     return audio_data, duration
 
@@ -581,7 +708,7 @@ def generate_subtitles(
 
     if not quiet:
         print_success("Recognition complete")
-        print_info(f"📝 Recognized text: {result['text'][:100]}...")
+        print_info(f"Recognized text: {result['text'][:100]}...")
 
     # Generate SRT file
     generate_srt_file(result, output_srt_path)
@@ -648,7 +775,23 @@ def run_tts_with_subtitles(args) -> None:
         print_info("Loading ChatTTS model...")
 
     chat = ChatTTS.Chat()
-    chat.load(compile=False)
+    # Try to load from huggingface cache first, fall back to local download
+    import os
+    hf_cache_path = os.path.join(
+        os.path.expanduser("~/.cache/huggingface/hub/models--2Noise--ChatTTS/snapshots")
+    )
+    if os.path.exists(hf_cache_path):
+        # Find the latest snapshot
+        snapshots = [d for d in os.listdir(hf_cache_path) if os.path.isdir(os.path.join(hf_cache_path, d))]
+        if snapshots:
+            custom_path = os.path.join(hf_cache_path, snapshots[0])
+            if not args.quiet:
+                print_info(f"Loading from cache: {custom_path}")
+            chat.load(source="custom", custom_path=custom_path, compile=False)
+        else:
+            chat.load(source="huggingface", compile=False)
+    else:
+        chat.load(source="huggingface", compile=False)
 
     # 6. Check if text needs splitting
     text_chunks = []
@@ -678,9 +821,37 @@ def run_tts_with_subtitles(args) -> None:
             quiet=args.quiet
         )
     else:
-        # Multiple chunks - generate and merge
+        # Multiple paragraphs - process with sentence-level granularity
+        # Pause rules: 1.0s between paragraphs, 0.5s between sentences
+        num_paragraphs = len(text_chunks)
+
+        # Split each paragraph into sentences
+        all_sentences = []
+        paragraph_boundaries = [0]  # Track where each paragraph starts
+
+        for para in text_chunks:
+            sentences = split_paragraph_to_sentences(para)
+            if not sentences:
+                sentences = [para]  # Fallback: treat whole paragraph as one sentence
+            all_sentences.extend(sentences)
+            paragraph_boundaries.append(len(all_sentences))
+
+        num_sentences = len(all_sentences)
+        avg_sentence_chars = sum(len(s) for s in all_sentences) // max(num_sentences, 1)
+
+        # Calculate optimal batch size based on GPU memory
+        batch_size = calculate_optimal_batch_size(
+            num_chunks=num_sentences,
+            chunk_chars=avg_sentence_chars
+        )
+
         if not args.quiet:
-            print_step(1, total_steps, "Generating audio in chunks...")
+            free_mem = get_gpu_free_memory_mb()
+            mem_per_chunk = estimate_memory_per_chunk_mb(avg_sentence_chars)
+            print_step(1, total_steps, f"Generating audio ({num_paragraphs} paragraphs, {num_sentences} sentences)...")
+            print_info(f"GPU free memory: {free_mem:.0f} MB")
+            print_info(f"Estimated memory per sentence: {mem_per_chunk:.0f} MB")
+            print_info(f"Auto batch size: {batch_size}")
 
         # Load or create speaker (ensure consistency across chunks)
         if args.speaker:
@@ -692,69 +863,109 @@ def run_tts_with_subtitles(args) -> None:
                 if not args.quiet:
                     print_info(f"Speaker saved to: {args.save_speaker}")
 
-        # Generate audio for each chunk
-        audio_segments = []
-        with TemporaryDirectory() as tmpdir:
-            for i, chunk in enumerate(text_chunks, 1):
-                if not args.quiet:
-                    print_info(f"Processing chunk {i}/{len(text_chunks)} ({len(chunk)} chars)")
-
-                temp_output = f"{tmpdir}/chunk_{i}.wav"
-
-                # Refine parameters for controlling pause/break at punctuation
-                params_refine_text = ChatTTS.Chat.RefineTextParams(
-                    prompt=f"[break_{args.break_level}]",
-                    show_tqdm=not args.quiet,
-                )
-
-                # Generate audio for this chunk
-                params_infer_code = ChatTTS.Chat.InferCodeParams(
-                    spk_emb=spk,
-                    prompt=f"[speed_{args.speed}]",
-                    temperature=0.3,
-                    top_P=0.7,
-                    top_K=20,
-                    repetition_penalty=1.05,
-                    max_new_token=2048,
-                    ensure_non_empty=True,
-                )
-
-                wavs = chat.infer(
-                    [chunk],
-                    skip_refine_text=False,
-                    params_refine_text=params_refine_text,
-                    params_infer_code=params_infer_code,
-                    use_decoder=True,
-                    do_text_normalization=False,
-                    do_homophone_replacement=False,
-                    split_text=True,
-                    max_split_batch=10,
-                )
-
-                # Stage 1: Light per-chunk normalization (70% adaptive, 30% original)
-                # This prevents extreme volume differences while preserving some dynamics
-                normalized = float_to_int16(wavs[0])
-                original = (wavs[0] * 32767).astype(np.int16)
-                audio_data = (normalized * 0.7 + original * 0.3).astype(np.int16)
-                audio_segments.append(audio_data)
-
-        # Merge all audio segments
         if not args.quiet:
-            print_info("Merging audio chunks...")
+            for i, para in enumerate(text_chunks, 1):
+                para_sentences = split_paragraph_to_sentences(para)
+                print_info(f"Paragraph {i}: {len(para)} chars, {len(para_sentences)} sentences")
 
-        merged_audio = merge_audio_files(audio_segments)
+        # Refine parameters for controlling pause/break at punctuation
+        params_refine_text = ChatTTS.Chat.RefineTextParams(
+            prompt=f"[break_{args.break_level}]",
+            show_tqdm=not args.quiet,
+        )
 
-        # Stage 2: Final overall normalization
-        # Convert to float, normalize, then back to int16 for consistent volume
-        merged_audio_float = merged_audio.astype(np.float32) / 32767.0
-        merged_audio = float_to_int16(merged_audio_float)
+        # Audio generation parameters
+        params_infer_code = ChatTTS.Chat.InferCodeParams(
+            spk_emb=spk,
+            prompt=f"[speed_{args.speed}]",
+            temperature=0.3,
+            top_P=0.7,
+            top_K=20,
+            repetition_penalty=1.05,
+            max_new_token=2048,
+            ensure_non_empty=True,
+        )
+
+        # Process all sentences in batches
+        sentence_audios = [None] * num_sentences
+        num_batches = (num_sentences + batch_size - 1) // batch_size
+
+        for batch_idx in range(num_batches):
+            start_idx = batch_idx * batch_size
+            end_idx = min(start_idx + batch_size, num_sentences)
+            batch_sentences = all_sentences[start_idx:end_idx]
+
+            if not args.quiet:
+                print_info(f"Processing batch {batch_idx + 1}/{num_batches} (sentences {start_idx + 1}-{end_idx})...")
+
+            # Batch inference
+            wavs = chat.infer(
+                batch_sentences,
+                skip_refine_text=False,
+                params_refine_text=params_refine_text,
+                params_infer_code=params_infer_code,
+                use_decoder=True,
+                do_text_normalization=False,
+                do_homophone_replacement=False,
+                split_text=False,
+            )
+
+            # Store results
+            for i, wav in enumerate(wavs):
+                sentence_idx = start_idx + i
+                if wav is not None and len(wav) > 0:
+                    normalized = float_to_int16(wav)
+                    original = (wav * 32767).astype(np.int16)
+                    audio_data = (normalized * 0.7 + original * 0.3).astype(np.int16)
+                    sentence_audios[sentence_idx] = audio_data
+
+        # Merge with proper pause durations
+        # 0.5s between sentences within a paragraph, 1.0s between paragraphs
+        if not args.quiet:
+            print_info("Merging audio with pauses...")
+
+        final_segments = []
+        sample_rate = 24000
+        sentence_pause = np.zeros(int(sample_rate * 0.5), dtype=np.int16)
+        paragraph_pause = np.zeros(int(sample_rate * 1.0), dtype=np.int16)
+
+        for para_idx in range(num_paragraphs):
+            para_start = paragraph_boundaries[para_idx]
+            para_end = paragraph_boundaries[para_idx + 1]
+
+            # Add paragraph pause before (except for first paragraph)
+            if para_idx > 0 and final_segments:
+                final_segments.append(paragraph_pause)
+
+            # Add sentences within this paragraph
+            for sent_idx in range(para_start, para_end):
+                if sentence_audios[sent_idx] is not None:
+                    # Add sentence pause before (except for first sentence in paragraph)
+                    if sent_idx > para_start and final_segments and not np.array_equal(final_segments[-1], paragraph_pause):
+                        final_segments.append(sentence_pause)
+                    final_segments.append(sentence_audios[sent_idx])
+
+            if not args.quiet:
+                para_duration = sum(len(sentence_audios[i]) for i in range(para_start, para_end) if sentence_audios[i] is not None) / sample_rate
+                print_info(f"Paragraph {para_idx + 1} done: {para_duration:.2f}s")
+
+        # Concatenate all segments
+        if final_segments:
+            merged_audio = np.concatenate(final_segments)
+        else:
+            merged_audio = np.array([], dtype=np.int16)
+
+        # Final overall normalization
+        if len(merged_audio) > 0:
+            merged_audio_float = merged_audio.astype(np.float32) / 32767.0
+            merged_audio = float_to_int16(merged_audio_float)
 
         wavfile.write(args.output_audio, 24000, merged_audio)
         duration = len(merged_audio) / 24000
 
         if not args.quiet:
             print_success(f"Audio saved: {args.output_audio}")
-            print_info(f"⏱️  Duration: {duration:.2f} seconds")
+            print_info(f"Duration: {duration:.2f} seconds")
 
     generated_files = [args.output_audio]
     whisper_result = None

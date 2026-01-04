@@ -185,7 +185,12 @@ class GPT(nn.Module):
         cache_length = 0
         if past_key_values is not None:
             if isinstance(past_key_values, Cache):
-                if past_key_values.layers and len(past_key_values.layers):
+                # Compatible with both old (.layers) and new (.key_cache) transformers versions
+                cache_has_content = (
+                    (hasattr(past_key_values, 'key_cache') and len(past_key_values.key_cache) > 0) or
+                    (hasattr(past_key_values, 'layers') and past_key_values.layers and len(past_key_values.layers) > 0)
+                )
+                if cache_has_content:
                     past_length = (
                         int(cache_position[0])
                         if cache_position is not None
