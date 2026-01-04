@@ -257,11 +257,16 @@ def normalize_text_for_tts(text: str) -> str:
 
 def split_text_intelligently(text: str, max_length: int = 800) -> List[str]:
     """
-    Split long text into smaller chunks at sentence boundaries.
+    Split long text into smaller chunks by paragraphs.
+
+    Strategy:
+    1. First split by paragraphs (one or more newlines)
+    2. If a paragraph exceeds 800 characters, split at the last period (.)
+       that keeps the chunk under 800 characters
 
     Args:
         text: Input text to split
-        max_length: Maximum length of each chunk in characters
+        max_length: Maximum length of each chunk (default: 800)
 
     Returns:
         List of text chunks
@@ -270,41 +275,41 @@ def split_text_intelligently(text: str, max_length: int = 800) -> List[str]:
     if len(text) <= max_length:
         return [text]
 
-    # Split by sentences (., !, ?, or newlines)
-    sentence_pattern = r'(?<=[.!?])\s+|\n+'
-    sentences = re.split(sentence_pattern, text)
+    # Step 1: Split by paragraphs (one or more newlines)
+    paragraphs = re.split(r'\n+', text)
 
     chunks = []
-    current_chunk = ""
 
-    for sentence in sentences:
-        sentence = sentence.strip()
-        if not sentence:
+    for para in paragraphs:
+        para = para.strip()
+        if not para:
             continue
 
-        # If single sentence is too long, split by commas or spaces
-        if len(sentence) > max_length:
-            # Try splitting by comma first
-            parts = re.split(r',\s+', sentence)
-            for part in parts:
-                if len(current_chunk) + len(part) + 2 <= max_length:
-                    current_chunk += (", " if current_chunk else "") + part
-                else:
-                    if current_chunk:
-                        chunks.append(current_chunk.strip())
-                    current_chunk = part
-        elif len(current_chunk) + len(sentence) + 1 <= max_length:
-            # Add sentence to current chunk
-            current_chunk += (" " if current_chunk else "") + sentence
-        else:
-            # Start new chunk
-            if current_chunk:
-                chunks.append(current_chunk.strip())
-            current_chunk = sentence
+        # If paragraph is short enough, add directly
+        if len(para) <= max_length:
+            chunks.append(para)
+            continue
 
-    # Add remaining chunk
-    if current_chunk:
-        chunks.append(current_chunk.strip())
+        # Step 2: Paragraph too long, split at last period within limit
+        remaining = para
+        while len(remaining) > max_length:
+            # Find the last period within max_length
+            search_text = remaining[:max_length]
+            last_period = search_text.rfind('.')
+
+            if last_period > 0:
+                # Split at the last period
+                chunk = remaining[:last_period + 1].strip()
+                remaining = remaining[last_period + 1:].strip()
+                chunks.append(chunk)
+            else:
+                # No period found, force split at max_length
+                chunks.append(remaining[:max_length].strip())
+                remaining = remaining[max_length:].strip()
+
+        # Add remaining text
+        if remaining:
+            chunks.append(remaining)
 
     return chunks
 
